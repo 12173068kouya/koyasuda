@@ -1,0 +1,70 @@
+ { 
+    "type": "Microsoft.VirtualMachineImages/imageTemplates", 
+    "apiVersion": "2019-05-01-preview", 
+    "location": "west us2", 
+    "tags": {
+             }
+    "identity":{},           
+    "dependsOn": [], 
+    "properties": { 
+        "buildTimeoutInMinutes": 240, 
+        "build": {},
+		"source":{
+		"type": "PlatformImage",
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "18.04-LTS",
+                "version": "18.04.201903060"
+		},
+        "customize": [ {
+                "type": "Shell",
+                "name": "RunScripts01",
+                "scriptUri": "https://raw.githubusercontent.com/danielsollondon/azvmimagebuilder/master/quickquickstarts/customizeScript.sh"
+            },
+        
+            
+            {
+                "type": "File",
+                "name": "downloadBuildArtifacts",
+                "sourceUri": "https://raw.githubusercontent.com/danielsollondon/azvmimagebuilder/master/quickquickstarts/exampleArtifacts/buildArtifacts/index.html",
+                "destination":"/tmp/index.html"
+            },
+
+            {
+                "type": "Shell",
+                "name": "setupBuildPath",
+                "inline": [
+                    "sudo mkdir /buildArtifacts",
+                    "sudo cp /tmp/index.html /buildArtifacts/index.html"
+                ]
+            },
+			            {
+                "type": "Shell",
+                "name": "setupBuildPath",
+                "inline": [
+                    "sudo mkdir aab"
+                ]
+            },
+
+            {
+                "type": "Shell",
+                "name": "InstallUpgrades",
+                "inline": [
+                    "sudo apt install unattended-upgrades"
+                ]
+            }{
+		"type": "Shell",
+                "name": "koyasutizer",
+                "inline": [
+                    /usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync
+					]},
+					
+					], 
+        "distribute": {
+		"type":"managedImage",
+       "imageId": "/subscriptions/8aa22af4-9dad-44a9-8659-0a6884482967/resourceGroups/gomigomi/providers/Microsoft.Compute/images/imagebuilder",
+       "location": "west us2",
+       "runOutputName": "koyasuda",
+		} 
+      } 
+ } 
